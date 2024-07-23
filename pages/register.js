@@ -1,45 +1,32 @@
 import Link from "next/link";
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { IoLogoGoogle, IoLogoFacebook } from "react-icons/io";
-import { auth, db } from "@/firebase/firebase";
 import {
-  signInWithEmailAndPassword,
   GoogleAuthProvider,
   FacebookAuthProvider,
   signInWithPopup,
-  sendPasswordResetEmail,
+  createUserWithEmailAndPassword,
+  updateProfile,
 } from "firebase/auth";
 import { useAuth } from "@/context/authContext";
 import { useRouter } from "next/router";
-import ToastMessage from "@/components/ToastMessage";
-import { toast } from "react-toastify";
+import { doc, setDoc } from "firebase/firestore";
+import { profileColors } from "@/utils/constants";
 import Loader from "@/components/Loader";
 
 const gProvider = new GoogleAuthProvider();
 const fProvider = new FacebookAuthProvider();
 
-const Login = () => {
+const Register = () => {
   const router = useRouter();
   const { currentUser, isLoading } = useAuth();
-  const [email, setEmail] = useState("");
 
   useEffect(() => {
     if (!isLoading && currentUser) {
-      // it means user logged in
+      // it means the user is logged in
       router.push("/");
     }
   }, [currentUser, isLoading]);
-
-  const handleSumbit = async (e) => {
-    e.preventDefault();
-    const email = e.target[0].value;
-    const password = e.target[1].value;
-    try {
-      await signInWithEmailAndPassword(auth, email, password);
-    } catch (error) {
-      console.error(error);
-    }
-  };
 
   const signInWithGoogle = async () => {
     try {
@@ -57,21 +44,34 @@ const Login = () => {
     }
   };
 
-  const resetPassword = async () => {
+  const handleSumbit = async (e) => {
+    e.preventDefault();
+    const displayName = e.target[0].value;
+    const email = e.target[1].value;
+    const password = e.target[2].value;
+    const colorIndex = Math.floor(Math.random() * profileColors.length);
+
     try {
-      toast.promise(
-        async () => {
-          await sendPasswordResetEmail(auth, email);
-        },
-        {
-          pending: "Generating reset link",
-          success: "Reset email sent to your registered email id.",
-          error: "You may have entered the wrong email id!",
-        },
-        {
-          autoClose: 5000,
-        }
+      const { user } = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
       );
+
+      await setDoc(doc(db, "users", user.uid), {
+        uid: user.uid,
+        displayName,
+        email,
+        color: profileColors[colorIndex],
+      });
+
+      await setDoc(doc(db, "userChats", user.uid), {});
+
+      await updateProfile(user, {
+        displayName,
+      });
+
+      router.push("/");
     } catch (error) {
       console.error(error);
     }
@@ -81,10 +81,9 @@ const Login = () => {
     <Loader />
   ) : (
     <div className="flex justify-center items-center min-h-screen bg-c1">
-      <ToastMessage />
-      <div className="flex items-center flex-col w-full max-w-md p-6">
+      <div className="flex flex-col items-center max-w-md w-full p-6">
         <div className="text-center">
-          <div className="text-4xl font-bold">Login to Your Account</div>
+          <div className="text-4xl font-bold">Create New Account</div>
           <div className="mt-3 text-c3">
             Connect and chat with anyone, anywhere
           </div>
@@ -125,11 +124,16 @@ const Login = () => {
           className="flex flex-col items-center gap-3 w-full"
         >
           <input
+            type="text"
+            placeholder="Display Name"
+            className="w-full h-14 bg-c5 rounded-xl outline-none border-none px-5 text-c3"
+            autoComplete="off"
+          />
+          <input
             type="email"
             placeholder="Email"
             className="w-full h-14 bg-c5 rounded-xl outline-none border-none px-5 text-c3"
             autoComplete="off"
-            onChange={(e) => setEmail(e.target.value)}
           />
           <input
             type="password"
@@ -137,23 +141,19 @@ const Login = () => {
             className="w-full h-14 bg-c5 rounded-xl outline-none border-none px-5 text-c3"
             autoComplete="off"
           />
-          <div className="text-right w-full text-c3">
-            <span className="cursor-pointer" onClick={resetPassword}>
-              Forgot Password?
-            </span>
-          </div>
+
           <button className="mt-4 w-full h-14 rounded-xl outline-none text-base font-semibold bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500">
-            Login to Your Account
+            Sign Up
           </button>
         </form>
 
         <div className="flex justify-center gap-1 text-c3 mt-5">
-          <span>Not a member yet?</span>
+          <span>Already have an account?</span>
           <Link
-            href="/register"
+            href="/login"
             className="font-semibold text-white underline cursor-pointer"
           >
-            Register Now
+            Login
           </Link>
         </div>
       </div>
@@ -161,4 +161,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default Register;
