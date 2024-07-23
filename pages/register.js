@@ -13,6 +13,7 @@ import { useRouter } from "next/router";
 import { doc, setDoc } from "firebase/firestore";
 import { profileColors } from "@/utils/constants";
 import Loader from "@/components/Loader";
+import { auth, db } from "@/firebase/firebase"; // Ensure you have these imports
 
 const gProvider = new GoogleAuthProvider();
 const fProvider = new FacebookAuthProvider();
@@ -23,10 +24,9 @@ const Register = () => {
 
   useEffect(() => {
     if (!isLoading && currentUser) {
-      // it means the user is logged in
       router.push("/");
     }
-  }, [currentUser, isLoading]);
+  }, [currentUser, isLoading, router]);
 
   const signInWithGoogle = async () => {
     try {
@@ -44,7 +44,7 @@ const Register = () => {
     }
   };
 
-  const handleSumbit = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const displayName = e.target[0].value;
     const email = e.target[1].value;
@@ -120,7 +120,7 @@ const Register = () => {
         </div>
 
         <form
-          onSubmit={handleSumbit}
+          onSubmit={handleSubmit}
           className="flex flex-col items-center gap-3 w-full"
         >
           <input

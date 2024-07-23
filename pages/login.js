@@ -25,12 +25,11 @@ const Login = () => {
 
   useEffect(() => {
     if (!isLoading && currentUser) {
-      // it means user logged in
       router.push("/");
     }
-  }, [currentUser, isLoading]);
+  }, [currentUser, isLoading, router]);
 
-  const handleSumbit = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const email = e.target[0].value;
     const password = e.target[1].value;
@@ -121,7 +120,7 @@ const Login = () => {
         </div>
 
         <form
-          onSubmit={handleSumbit}
+          onSubmit={handleSubmit}
           className="flex flex-col items-center gap-3 w-full"
         >
           <input
