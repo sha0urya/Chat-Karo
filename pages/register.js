@@ -13,7 +13,7 @@ import { useRouter } from "next/router";
 import { doc, setDoc } from "firebase/firestore";
 import { profileColors } from "@/utils/constants";
 import Loader from "@/components/Loader";
-import { auth, db } from "@/firebase/firebase"; // Ensure you have these imports
+import { auth, db } from "@/firebase/firebase"; 
 
 const gProvider = new GoogleAuthProvider();
 const fProvider = new FacebookAuthProvider();
