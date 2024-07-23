@@ -28,7 +28,7 @@ const Login = () => {
       // it means user logged in
       router.push("/");
     }
-  }, [currentUser, isLoading, router]); // Added router to the dependency array
+  }, [currentUser, isLoading, router]); 
 
   const handleSumbit = async (e) => {
     e.preventDefault();
