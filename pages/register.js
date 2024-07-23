@@ -28,7 +28,7 @@ const Login = () => {
       // it means user logged in
       router.push("/");
     }
-  }, [currentUser, isLoading, router]);
+  }, [currentUser, isLoading]);
 
   const handleSumbit = async (e) => {
     e.preventDefault();
