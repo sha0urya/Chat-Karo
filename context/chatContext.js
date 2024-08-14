@@ -75,7 +75,7 @@ export const ChatContextProvider = ({ children }) => {
                 setImageViewer,
                 resetFooterStates,
             }}
-        >
+        > 
             {children}
         </chatContext.Provider>
     );

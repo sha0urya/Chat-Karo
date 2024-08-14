@@ -28,13 +28,18 @@ const Home = () => {
 
         <div className="flex bg-c2 grow">
           <div
-            className={`w-[260px] p-5 overflow-auto scrollbar shrink-0 border-r border-white/[0.05] transition-all duration-300 ${
+            className={`w-[260px] p-5 glass-effect overflow-auto scrollbar shrink-0 border-r border-white/[0.05] transition-all duration-300 ${
               isHovered ? "w-[400px]" : "w-[260px]"
             }`}
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
+            // style={{
+            //   backgroundImage: "url('/wallpaper.jpg')",
+            //   backgroundSize: "cover",
+            //   backgroundPosition: "center",
+            // }}
           >
-            <div className="flex flex-col h-full">
+            <div className="flex flex-col min-h-full">
               <Chats isHovered={isHovered} />
             </div>
           </div>

@@ -14,7 +14,6 @@ import { useRouter } from "next/router";
 import ToastMessage from "@/components/ToastMessage";
 import { toast } from "react-toastify";
 import Loader from "@/components/Loader";
-import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import { IoEye, IoEyeOff } from "react-icons/io5";
 
 const gProvider = new GoogleAuthProvider();

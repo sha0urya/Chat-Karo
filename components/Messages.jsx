@@ -30,22 +30,27 @@ const Messages = () => {
         chatContainer.scrollTop = chatContainer.scrollHeight;
     };
     return (
-        <div
-            ref={ref}
-            className="grow p-5 overflow-auto scrollbar flex flex-col"
-        >
-            {messages
-                ?.filter((m) => {
-                    return (
-                        m?.deletedInfo?.[currentUser.uid] !== DELETED_FOR_ME &&
-                        !m?.deletedInfo?.deletedForEveryone &&
-                        !m?.deleteChatInfo?.[currentUser.uid]
-                    );
-                })
-                ?.map((m) => {
-                    return <Message message={m} key={m.id} />;
-                })}
-        </div>
+      <div
+        ref={ref}
+        className="grow p-5 overflow-auto scrollbar flex flex-col"
+        style={{
+          backgroundImage: "url('/wallpaper6.jpg')",
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+        }}
+      >
+        {messages
+          ?.filter((m) => {
+            return (
+              m?.deletedInfo?.[currentUser.uid] !== DELETED_FOR_ME &&
+              !m?.deletedInfo?.deletedForEveryone &&
+              !m?.deleteChatInfo?.[currentUser.uid]
+            );
+          })
+          ?.map((m) => {
+            return <Message message={m} key={m.id} />;
+          })}
+      </div>
     );
 };
 
