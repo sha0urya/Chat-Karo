@@ -227,8 +227,28 @@ const Chats = ({ isHovered }) => {
                   <Avatar size="x-large" user={user} />
                   <div className="flex flex-col gap-1 grow relative">
                     <span className="text-base text-white flex items-center justify-between">
-                      <div className="font-medium">{user?.displayName}</div>
-                      <div className="text-c3 text-xs">{formateDate(date)}</div>
+                      {isHovered ? (
+                        <>
+                          <div
+                            className="font-medium"
+                            style={{ textTransform: "capitalize" }}
+                          >
+                            {user?.displayName}
+                          </div>
+                          <div className="text-c3 text-xs">
+                            {formateDate(date)}
+                          </div>
+                        </>
+                      ) : (
+                        <>
+                          <div
+                            className="font-light"
+                            style={{ textTransform: "capitalize" }}
+                          >
+                            {user?.displayName}
+                          </div>
+                        </>
+                      )}
                     </span>
                     <p className="text-sm text-c3 line-clamp-1 break-all">
                       {chat[1]?.lastMessage?.text ||

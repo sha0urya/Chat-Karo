@@ -18,7 +18,9 @@ const ChatHeader = () => {
         <div className="flex items-center gap-3">
           <Avatar size="large" user={user} />
           <div>
-            <div className="font-medium">{user.displayName}</div>
+            <div className="font-light" style={{ textTransform: "capitalize" }}>
+              {user?.displayName}
+            </div>
             <p className="text-sm text-c3">{online ? "Online" : "Offline"}</p>
           </div>
         </div>

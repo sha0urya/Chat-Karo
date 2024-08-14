@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useRouter } from "next/router";
 import { BiEdit, BiCheck } from "react-icons/bi";
 import Avatar from "./Avatar";
 import { useAuth } from "@/context/authContext";
@@ -16,6 +17,9 @@ import { updateProfile } from "firebase/auth";
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import UsersPopup from "./popup/UsersPopup";
 import LogoutModal from "./modal/LogoutModal";
+import RoomModal from "./modal/RoomModal";
+import { FaVideo } from "react-icons/fa6";
+
 
 const LeftNav = () => {
   const [usersPopup, setUsersPopup] = useState(false);
@@ -24,9 +28,17 @@ const LeftNav = () => {
   const { currentUser, signOut, setCurrentUser } = useAuth();
   const [loading, setLoading] = useState(true);
   const [showLogoutModal, setShowLogoutModal] = useState(false);
+  const [showRoomModal, setShowRoomModal] = useState(false);
+  const router = useRouter();
+
+  useEffect(() => {
+    if (currentUser) {
+      setLoading(false);
+    }
+  }, [currentUser]);
 
   const handleLogoutClick = () => {
-    setShowLogoutModal(true); 
+    setShowLogoutModal(true);
   };
 
   const handleLogoutConfirm = () => {
@@ -38,13 +50,29 @@ const LeftNav = () => {
     setShowLogoutModal(false);
   };
 
-  const authUser = auth.currentUser;
-
-  useEffect(() => {
-    if (currentUser) {
-      setLoading(false);
+  const handleRoomOption = (option, roomID) => {
+    if (option === "create") {
+      const generatedRoomID = Date.now().toString(); // Generate a unique room ID
+      router.push(`/VideoCall?roomID=${generatedRoomID}`);
+    } else if (option === "join" && roomID) {
+      // Here you can add room ID validation logic
+      if (validateRoomID(roomID)) {
+        router.push(`/VideoCall?roomID=${roomID}`);
+      } else {
+        alert("Invalid Room ID. Please try again.");
+      }
     }
-  }, [currentUser]);
+  };
+
+  const validateRoomID = (roomID) => {
+    // Implement your logic to validate the room ID here
+    return roomID.length > 5; // Example validation
+  };
+
+  const handleVideoCallRedirect = () => {
+    const roomID = "exampleRoomID"; // Replace this with your logic to generate or retrieve a room ID
+    router.push(`/VideoCall?roomID=${roomID}`); // Redirect to the video call page with the roomID
+  };
 
   const uploadImageToFirestore = (file) => {
     try {
@@ -75,7 +103,7 @@ const LeftNav = () => {
               async (downloadURL) => {
                 console.log("File available at", downloadURL);
                 handleUpdateProfile("photo", downloadURL);
-                await updateProfile(authUser, {
+                await updateProfile(auth.currentUser, {
                   photoURL: downloadURL,
                 });
               }
@@ -89,7 +117,6 @@ const LeftNav = () => {
   };
 
   const handleUpdateProfile = (type, value) => {
-    // color, name, photo, photo-remove
     let obj = { ...currentUser };
     switch (type) {
       case "color":
@@ -116,12 +143,12 @@ const LeftNav = () => {
           setCurrentUser(obj);
 
           if (type === "photo-remove") {
-            await updateProfile(authUser, {
+            await updateProfile(auth.currentUser, {
               photoURL: null,
             });
           }
           if (type === "name") {
-            await updateProfile(authUser, {
+            await updateProfile(auth.currentUser, {
               displayName: value,
             });
             setNameEdited(false);
@@ -143,13 +170,12 @@ const LeftNav = () => {
 
   const onkeyup = (event) => {
     if (event.target.innerText.trim() !== currentUser.displayName) {
-      // name is edited
       setNameEdited(true);
     } else {
-      // name is not edited
       setNameEdited(false);
     }
   };
+
   const onkeydown = (event) => {
     if (event.key === "Enter" && event.keyCode === 13) {
       event.preventDefault();
@@ -274,6 +300,14 @@ const LeftNav = () => {
           editProfile ? "ml-5" : "flex-col items-center"
         }`}
       >
+        {" "}
+        <Icon
+          size="x-large"
+          className="bg-green-500 hover:bg-gray-600"
+          icon={<FaVideo size={24} />}
+          onClick={() => setShowRoomModal(true)}
+        />
+        
         <Icon
           size="x-large"
           className="bg-green-500 hover:bg-gray-600"
@@ -293,7 +327,13 @@ const LeftNav = () => {
       {showLogoutModal && (
         <LogoutModal
           onConfirm={handleLogoutConfirm}
-          onCancel={handleLogoutCancel} 
+          onCancel={handleLogoutCancel}
+        />
+      )}
+      {showRoomModal && (
+        <RoomModal
+          onClose={() => setShowRoomModal(false)}
+          onRoomOption={handleRoomOption}
         />
       )}
     </div>
