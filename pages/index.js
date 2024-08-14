@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useAuth } from "@/context/authContext";
 import { useRouter } from "next/router";
 import Loader from "@/components/Loader";
@@ -11,6 +11,7 @@ const Home = () => {
   const router = useRouter();
   const { signOut, currentUser, isLoading } = useAuth();
   const { data } = useChatContext();
+  const [isHovered, setIsHovered] = useState(false);
 
   useEffect(() => {
     if (!isLoading && !currentUser) {
@@ -26,9 +27,15 @@ const Home = () => {
         <LeftNav />
 
         <div className="flex bg-c2 grow">
-          <div className="w-[400px] p-5 overflow-auto scrollbar shrink-0 border-r border-white/[0.05]">
+          <div
+            className={`w-[260px] p-5 overflow-auto scrollbar shrink-0 border-r border-white/[0.05] transition-all duration-300 ${
+              isHovered ? "w-[400px]" : "w-[260px]"
+            }`}
+            onMouseEnter={() => setIsHovered(true)}
+            onMouseLeave={() => setIsHovered(false)}
+          >
             <div className="flex flex-col h-full">
-              <Chats />
+              <Chats isHovered={isHovered} />
             </div>
           </div>
           {data.user && <Chat />}

@@ -1,5 +1,5 @@
 import Link from "next/link";
-import React, { useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { IoLogoGoogle, IoLogoFacebook } from "react-icons/io";
 import {
   GoogleAuthProvider,
@@ -13,7 +13,8 @@ import { useRouter } from "next/router";
 import { doc, setDoc } from "firebase/firestore";
 import { profileColors } from "@/utils/constants";
 import Loader from "@/components/Loader";
-import { auth, db } from "@/firebase/firebase"; 
+import { auth, db } from "@/firebase/firebase";
+import { IoEye, IoEyeOff } from "react-icons/io5";
 
 const gProvider = new GoogleAuthProvider();
 const fProvider = new FacebookAuthProvider();
@@ -21,6 +22,7 @@ const fProvider = new FacebookAuthProvider();
 const Register = () => {
   const router = useRouter();
   const { currentUser, isLoading } = useAuth();
+  const [passwordVisible, setPasswordVisible] = useState(false);
 
   useEffect(() => {
     if (!isLoading && currentUser) {
@@ -50,6 +52,31 @@ const Register = () => {
     const email = e.target[1].value;
     const password = e.target[2].value;
     const colorIndex = Math.floor(Math.random() * profileColors.length);
+
+    if (password.length < 8) {
+      alert("Password must be at least 8 characters long.");
+      return;
+    }
+
+    if (!/[A-Z]/.test(password)) {
+      alert("Password must contain at least one uppercase letter.");
+      return;
+    }
+
+    if (!/[a-z]/.test(password)) {
+      alert("Password must contain at least one lowercase letter.");
+      return;
+    }
+
+    if (!/[0-9]/.test(password)) {
+      alert("Password must contain at least one digit.");
+      return;
+    }
+
+    if (!/[!@#$%^&*]/.test(password)) {
+      alert("Password must contain at least one special character.");
+      return;
+    }
 
     try {
       const { user } = await createUserWithEmailAndPassword(
@@ -135,12 +162,20 @@ const Register = () => {
             className="w-full h-14 bg-c5 rounded-xl outline-none border-none px-5 text-c3"
             autoComplete="off"
           />
-          <input
-            type="password"
-            placeholder="Password"
-            className="w-full h-14 bg-c5 rounded-xl outline-none border-none px-5 text-c3"
-            autoComplete="off"
-          />
+          <div className="w-full h-14 bg-c5 rounded-xl outline-none border-none px-5 flex items-center">
+            <input
+              type={passwordVisible ? "text" : "password"}
+              placeholder="Password"
+              className="w-full bg-c5 outline-none text-c3"
+              autoComplete="off"
+            />
+            <div
+              className="cursor-pointer"
+              onClick={() => setPasswordVisible(!passwordVisible)}
+            >
+              {passwordVisible ? <IoEyeOff size={24} /> : <IoEye size={24} />}
+            </div>
+          </div>
 
           <button className="mt-4 w-full h-14 rounded-xl outline-none text-base font-semibold bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500">
             Sign Up

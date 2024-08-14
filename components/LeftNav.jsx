@@ -15,6 +15,7 @@ import { db, auth, storage } from "@/firebase/firebase";
 import { updateProfile } from "firebase/auth";
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import UsersPopup from "./popup/UsersPopup";
+import LogoutModal from "./modal/LogoutModal";
 
 const LeftNav = () => {
   const [usersPopup, setUsersPopup] = useState(false);
@@ -22,6 +23,20 @@ const LeftNav = () => {
   const [nameEdited, setNameEdited] = useState(false);
   const { currentUser, signOut, setCurrentUser } = useAuth();
   const [loading, setLoading] = useState(true);
+  const [showLogoutModal, setShowLogoutModal] = useState(false);
+
+  const handleLogoutClick = () => {
+    setShowLogoutModal(true); 
+  };
+
+  const handleLogoutConfirm = () => {
+    setShowLogoutModal(false);
+    signOut();
+  };
+
+  const handleLogoutCancel = () => {
+    setShowLogoutModal(false);
+  };
 
   const authUser = auth.currentUser;
 
@@ -269,11 +284,17 @@ const LeftNav = () => {
           size="x-large"
           className="hover:bg-c2"
           icon={<IoLogOutOutline size={24} />}
-          onClick={signOut}
+          onClick={handleLogoutClick}
         />
       </div>
       {usersPopup && (
         <UsersPopup onHide={() => setUsersPopup(false)} title="Find Users" />
+      )}
+      {showLogoutModal && (
+        <LogoutModal
+          onConfirm={handleLogoutConfirm}
+          onCancel={handleLogoutCancel} 
+        />
       )}
     </div>
   );

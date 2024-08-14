@@ -14,6 +14,8 @@ import { useRouter } from "next/router";
 import ToastMessage from "@/components/ToastMessage";
 import { toast } from "react-toastify";
 import Loader from "@/components/Loader";
+import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
+import { IoEye, IoEyeOff } from "react-icons/io5";
 
 const gProvider = new GoogleAuthProvider();
 const fProvider = new FacebookAuthProvider();
@@ -22,6 +24,7 @@ const Login = () => {
   const router = useRouter();
   const { currentUser, isLoading } = useAuth();
   const [email, setEmail] = useState("");
+  const [passwordVisible, setPasswordVisible] = useState(false);
 
   useEffect(() => {
     if (!isLoading && currentUser) {
@@ -130,12 +133,20 @@ const Login = () => {
             autoComplete="off"
             onChange={(e) => setEmail(e.target.value)}
           />
-          <input
-            type="password"
-            placeholder="Password"
-            className="w-full h-14 bg-c5 rounded-xl outline-none border-none px-5 text-c3"
-            autoComplete="off"
-          />
+          <div className="relative w-full">
+            <input
+              type={passwordVisible ? "text" : "password"}
+              placeholder="Password"
+              className="w-full h-14 bg-c5 rounded-xl outline-none border-none px-5 text-c3"
+              autoComplete="off"
+            />
+            <span
+              className="absolute right-3 top-4 text-c3 cursor-pointer"
+              onClick={() => setPasswordVisible(!passwordVisible)}
+            >
+              {passwordVisible ? <IoEyeOff size={24} /> : <IoEye size={24} />}
+            </span>
+          </div>
           <div className="text-right w-full text-c3">
             <span className="cursor-pointer" onClick={resetPassword}>
               Forgot Password?

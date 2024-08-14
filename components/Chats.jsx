@@ -16,7 +16,7 @@ import Avatar from "./Avatar";
 import { useAuth } from "@/context/authContext";
 import { formateDate } from "@/utils/helpers";
 
-const Chats = () => {
+const Chats = ({ isHovered }) => {
   const {
     users,
     setUsers,
@@ -162,14 +162,29 @@ const Chats = () => {
   return (
     <div className="flex flex-col h-full">
       <div className="shrink-0 sticky -top-[20px] z-10 flex justify-center w-full bg-c2 py-5">
-        <RiSearch2Line className="absolute top-9 left-12 text-c3" />
-        <input
-          type="text"
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          placeholder="Search username..."
-          className="w-[300px] h-12 rounded-xl bg-c1/[0.5] pl-11 pr-5 placeholder:text-c3 outline-none text-base"
-        />
+        {isHovered ? (
+          <>
+            <RiSearch2Line className="absolute top-9 left-12 text-c3" />
+            <input
+              type="text"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder="Search username..."
+              className="w-[300px] h-12 rounded-xl bg-c1/[0.5] pl-11 pr-5 placeholder:text-c3 outline-none text-base"
+            />
+          </>
+        ) : (
+          <>
+            <RiSearch2Line className="absolute top-9 left-[1.25rem] right-1 text-c3" />
+            <input
+              type="text"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder="Search username..."
+              className="w-[200px] h-12 rounded-xl bg-c1/[0.5] m-3 mt-0 pl-11 pr-5 placeholder:text-c3 outline-none text-base"
+            />
+          </>
+        )}
       </div>
 
       <ul className="flex flex-col w-full my-5 gap-[2px]">
