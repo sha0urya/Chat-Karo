@@ -12,6 +12,7 @@ import MessageMenu from "./MessageMenu";
 import DeleteMsgPopup from "./popup/DeleteMsgPopup";
 import { db } from "@/firebase/firebase";
 import { DELETED_FOR_EVERYONE, DELETED_FOR_ME } from "@/utils/constants";
+import ClickAwayListener from "react-click-away-listener";
 
 const Message = ({ message }) => {
   const [showMenu, setShowMenu] = useState(false);
@@ -25,7 +26,6 @@ const Message = ({ message }) => {
     message.date?.seconds,
     message.date?.nanoseconds
   );
-
   const date = timestamp.toDate();
 
   const deletePopupHandler = () => {
@@ -33,29 +33,26 @@ const Message = ({ message }) => {
     setShowMenu(false);
   };
 
-  const deleteMesasge = async (action) => {
+  const deleteMessage = async (action) => {
     try {
       const messageId = message.id;
       const chatRef = doc(db, "chats", data.chatId);
-
       const chatDoc = await getDoc(chatRef);
 
-      const updatedMessages = chatDoc.data().messages.map((message) => {
-        if (message.id === messageId) {
+      const updatedMessages = chatDoc.data().messages.map((msg) => {
+        if (msg.id === messageId) {
           if (action === DELETED_FOR_ME) {
-            message.deletedInfo = {
+            msg.deletedInfo = {
               [currentUser.uid]: DELETED_FOR_ME,
             };
           }
-
           if (action === DELETED_FOR_EVERYONE) {
-            message.deletedInfo = {
+            msg.deletedInfo = {
               deletedForEveryone: true,
             };
           }
         }
-
-        return message;
+        return msg;
       });
 
       await updateDoc(chatRef, { messages: updatedMessages });
@@ -69,28 +66,39 @@ const Message = ({ message }) => {
     try {
       const messageId = message.id;
       const chatRef = doc(db, "chats", data.chatId);
-
       const chatDoc = await getDoc(chatRef);
 
-      const updatedMessages = chatDoc.data().messages.map((message) => {
-        if (message.id === messageId) {
-          message.likedBy = message.likedBy || [];
-          if (message.likedBy.includes(currentUser.uid)) {
-            message.likedBy = message.likedBy.filter(
-              (uid) => uid !== currentUser.uid
-            );
+      const updatedMessages = chatDoc.data().messages.map((msg) => {
+        if (msg.id === messageId) {
+          msg.likedBy = msg.likedBy || [];
+          if (msg.likedBy.includes(currentUser.uid)) {
+            msg.likedBy = msg.likedBy.filter((uid) => uid !== currentUser.uid);
           } else {
-            message.likedBy.push(currentUser.uid);
+            msg.likedBy.push(currentUser.uid);
           }
         }
-
-        return message;
+        return msg;
       });
 
       await updateDoc(chatRef, { messages: updatedMessages });
     } catch (error) {
       console.error(error);
     }
+  };
+
+  const copyToClipboard = (text) => {
+    navigator.clipboard.writeText(text).then(
+      () => {
+        console.log("Message copied to clipboard");
+      },
+      (err) => {
+        console.error("Failed to copy message: ", err);
+      }
+    );
+  };
+
+  const handleClickAway = () => {
+    setShowMenu(false);
   };
 
   return (
@@ -102,101 +110,100 @@ const Message = ({ message }) => {
           noHeader={true}
           shortHeight={true}
           self={self}
-          deleteMesasge={deleteMesasge}
+          deleteMessage={deleteMessage}
         />
       )}
-      <div
-        className={`flex items-end gap-3 mb-1 ${
-          self ? "justify-start flex-row-reverse" : ""
-        }`}
-      >
-        <Avatar
-          size="small"
-          user={self ? currentUser : users[data.user.uid]}
-          className="mb-4"
-        />
+      <ClickAwayListener onClickAway={handleClickAway}>
         <div
-          className={`group flex flex-col gap-4 p-4 rounded-3xl relative break-all ${
-            self ? "rounded-br-md bg-c5" : "rounded-bl-md bg-c1"
+          className={`flex items-end gap-3 mb-1 ${
+            self ? "justify-start flex-row-reverse" : ""
           }`}
         >
-          {message.text && (
-            <div
-              className="text-sm"
-              dangerouslySetInnerHTML={{
-                __html: wrapEmojisInHtmlTag(message.text),
-              }}
-            ></div>
-          )}
-
-          {message.img && (
-            <>
-              <Image
-                src={message.img}
-                width={250}
-                height={250}
-                alt={message?.text || ""}
-                className="rounded-3xl max-w-[250px]"
-                onClick={() => {
-                  setImageViewer({
-                    msgId: message.id,
-                    url: message.img,
-                  });
-                }}
-              />
-
-              {imageViewer && imageViewer.msgId === message.id && (
-                <ImageViewer
-                  src={[imageViewer.url]}
-                  currentIndex={0}
-                  disableScroll={false}
-                  closeOnClickOutside={true}
-                  onClose={() => setImageViewer(null)}
-                />
-              )}
-            </>
-          )}
-
+          <Avatar
+            size="small"
+            user={self ? currentUser : users[data.user.uid]}
+            className="mb-4"
+          />
           <div
-            className={`${
-              showMenu ? "" : "hidden"
-            } group-hover:flex absolute top-2 ${
-              self ? "left-2 bg-c5" : "right-2 bg-c1"
+            className={`group flex flex-col gap-4 p-4 rounded-3xl relative break-all cursor-pointer ${
+              self ? "rounded-br-md bg-c5" : "rounded-bl-md bg-c1"
             }`}
-            onClick={() => setShowMenu(true)}
+            onClick={() => setShowMenu(!showMenu)}
           >
-            <Icon
-              size="medium"
-              className="hover:bg-inherit rounded-none"
-              icon={<GoChevronDown size={24} className="text-c3" />}
-            />
+            {message.text && (
+              <div
+                className="text-sm"
+                dangerouslySetInnerHTML={{
+                  __html: wrapEmojisInHtmlTag(message.text),
+                }}
+              ></div>
+            )}
+
+            {message.img && (
+              <>
+                <Image
+                  src={message.img}
+                  width={250}
+                  height={250}
+                  alt={message?.text || ""}
+                  className="rounded-3xl max-w-[250px]"
+                  onClick={() => {
+                    setImageViewer({
+                      msgId: message.id,
+                      url: message.img,
+                    });
+                  }}
+                />
+                {imageViewer && imageViewer.msgId === message.id && (
+                  <ImageViewer
+                    src={[imageViewer.url]}
+                    currentIndex={0}
+                    disableScroll={false}
+                    closeOnClickOutside={true}
+                    onClose={() => setImageViewer(null)}
+                  />
+                )}
+              </>
+            )}
+
+            {/* Message Menu */}
             {showMenu && (
-              <MessageMenu
-                self={self}
-                setShowMenu={setShowMenu}
-                showMenu={showMenu}
-                deletePopupHandler={deletePopupHandler}
-                setEditMsg={() => setEditMsg(message)}
-                toggleLikeMsg={toggleLikeMessage}
-                likedByCurrentUser={message.likedBy?.includes(currentUser.uid)}
-              />
+              <div
+                className={`absolute top-2 ${
+                  self ? "left-2" : "right-2"
+                } bg-c1 rounded-lg shadow-lg`}
+              >
+                <MessageMenu
+                  self={self}
+                  setShowMenu={setShowMenu}
+                  showMenu={showMenu}
+                  deletePopupHandler={deletePopupHandler}
+                  setEditMsg={() => setEditMsg(message)}
+                  toggleLikeMsg={toggleLikeMessage}
+                  likedByCurrentUser={message.likedBy?.includes(
+                    currentUser.uid
+                  )}
+                  copyMessage={() => copyToClipboard(message.text)}
+                />
+              </div>
+            )}
+
+            {message.likedBy && message.likedBy.length > 0 && (
+              <div className="flex items-center space-x-2">
+                <div className="text-xs text-c3">Liked by:</div>
+                {message.likedBy.map((uid) => (
+                  <Avatar
+                    key={uid}
+                    size="extra-small"
+                    user={users[uid]}
+                    className="text-xs text-c3"
+                  />
+                ))}
+              </div>
             )}
           </div>
-          {message.likedBy && message.likedBy.length > 0 && (
-            <div className="flex items-center space-x-2">
-              <div className="text-xs text-c3">Liked by:</div>
-              {message.likedBy.map((uid) => (
-                <Avatar
-                  key={uid}
-                  size="extra-small"
-                  user={users[uid]}
-                  className="text-xs text-c3"
-                />
-              ))}
-            </div>
-          )}
         </div>
-      </div>
+      </ClickAwayListener>
       <div
         className={`flex items-end ${
           self ? "justify-start flex-row-reverse mr-12" : "ml-12"
