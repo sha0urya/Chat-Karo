@@ -4,6 +4,7 @@ import Avatar from "./Avatar";
 import Icon from "./Icon";
 import { IoEllipsisVerticalSharp } from "react-icons/io5";
 import ChatMenu from "./ChatMenu";
+import SearchInMsg from "./SearchInMsg"
 
 const ChatHeader = () => {
   const [showMenu, setShowMenu] = useState(false);
@@ -37,6 +38,7 @@ const ChatHeader = () => {
       )}
 
       <div className="flex items-center gap-2">
+        <SearchInMsg />
         <Icon
           size="large"
           className={`${showMenu ? "bg-c1" : ""}`}
