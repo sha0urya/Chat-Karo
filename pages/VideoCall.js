@@ -1,15 +1,15 @@
 import React, { useEffect } from "react";
-import { useAuth } from "@/context/authContext"; // Assuming you have an Auth context
+import { useAuth } from "@/context/authContext"; 
 import { useRouter } from "next/router";
 import Loader from "@/components/Loader";
 
 const VideoCall = () => {
-  const { currentUser, isLoading } = useAuth(); // Check authentication
+  const { currentUser, isLoading } = useAuth(); 
   const router = useRouter();
 
   useEffect(() => {
     if (!isLoading && !currentUser) {
-      router.push("/login"); // Redirect to login if not authenticated
+      router.push("/login"); 
     }
   }, [currentUser, isLoading, router]);
 
@@ -80,7 +80,7 @@ const VideoCall = () => {
       style={{
         width: "100vw",
         height: "100vh",
-        backgroundColor: "#f0f0f0", // Light background for better contrast
+        backgroundColor: "#f0f0f0",
         display: "flex",
         justifyContent: "center",
         alignItems: "center",

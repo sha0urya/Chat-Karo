@@ -19,6 +19,7 @@ import UsersPopup from "./popup/UsersPopup";
 import LogoutModal from "./modal/LogoutModal";
 import RoomModal from "./modal/RoomModal";
 import { FaVideo } from "react-icons/fa6";
+import { FaRegNewspaper } from "react-icons/fa6";
 
 
 const LeftNav = () => {
@@ -30,6 +31,10 @@ const LeftNav = () => {
   const [showLogoutModal, setShowLogoutModal] = useState(false);
   const [showRoomModal, setShowRoomModal] = useState(false);
   const router = useRouter();
+
+  const handleNewsRedirect = () => {
+    router.push("/news");
+  };
 
   useEffect(() => {
     if (currentUser) {
@@ -303,11 +308,17 @@ const LeftNav = () => {
         {" "}
         <Icon
           size="x-large"
+          className="bg-blue-500 hover:bg-gray-600"
+          icon={<FaRegNewspaper size={24} />}
+          onClick={handleNewsRedirect}
+        />
+
+        <Icon
+          size="x-large"
           className="bg-green-500 hover:bg-gray-600"
           icon={<FaVideo size={24} />}
           onClick={() => setShowRoomModal(true)}
         />
-        
         <Icon
           size="x-large"
           className="bg-green-500 hover:bg-gray-600"
