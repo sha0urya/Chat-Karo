@@ -21,7 +21,7 @@ const ChatHeader = () => {
   return (
     <div className="flex justify-between items-center pt-3 hover:shadow-2xl dark:hover:shadow-slate-400 pb-3 w-full border rounded-xl border-slate-950 dark:border-neutral-100 ">
       {user ? (
-        <div className="flex items-center gap-3">
+        <div className="pl-2 flex items-center gap-3">
           <Avatar size="large" user={user} />
           <div>
             <div
