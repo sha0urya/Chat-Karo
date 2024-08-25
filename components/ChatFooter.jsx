@@ -42,7 +42,7 @@ const ChatFooter = () => {
     };
 
     return (
-      <div className="flex items-center bg-c1/[0.5] p-2 rounded-xl relative">
+      <div className="flex items-center bg-slate-800 p-2 rounded-l relative">
         {attachmentPreview && (
           <div className="absolute w-[100px] h-[100px] bottom-16 left-0 bg-c1 p-2 rounded-md">
             <Image src={attachmentPreview} alt="" />

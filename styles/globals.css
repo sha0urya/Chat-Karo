@@ -65,20 +65,23 @@ body {
     padding-bottom: 10px;
 }
 
-body.light {
-    --bg-color: #ffffff;
-    --text-color: #000000;
-    --primary-color: #0070f3;
+.tooltip-custom {
+    background-color: #2d3748;
+    color: #ffffff;
+    font-size: 0.875rem;
+    padding: 0.5rem;
+    border-radius: 0.25rem;
 }
 
-body.dark {
-    --bg-color: #1a202c;
-    --text-color: #e2e8f0;
-    --primary-color: #63b3ed;
+.bg-blue-500 {
+    background-color: #6366f1;
 }
 
-/* Use these variables in your components */
-body {
-    background-color: var(--bg-color);
-    color: var(--text-color);
+.text-gray-600 {
+    color: #4b5563;
+}
+
+.hover\\:bg-blue-300:hover {
+    background-color: #93c5fd;
+    /* Adjust for hover effect */
 }

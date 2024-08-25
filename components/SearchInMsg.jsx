@@ -91,7 +91,9 @@ const SearchInMsg = () => {
         {/* Search Icon */}
         <div
           className={`cursor-pointer p-2 rounded-full ${
-            searchActive ? "bg-black text-white" : "hover:bg-gray-200"
+            searchActive
+              ? "bg-black text-white"
+              : "hover:bg-gray-200 dark:hover:bg-gray-800"
           }`}
           onClick={() => setSearchActive((prev) => !prev)}
         >
