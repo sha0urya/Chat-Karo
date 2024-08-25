@@ -125,7 +125,7 @@ const Message = ({ message }) => {
             className="mb-4"
           />
           <div
-            className={`group flex flex-col gap-4 p-4 rounded-3xl relative break-all cursor-pointer ${
+            className={`group flex flex-col gap-4 p-4 rounded-3xl relative break-all text-white cursor-pointer ${
               self ? "rounded-br-md bg-c5" : "rounded-bl-md bg-c1"
             }`}
             onClick={() => setShowMenu(!showMenu)}

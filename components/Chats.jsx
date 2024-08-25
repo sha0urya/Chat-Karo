@@ -196,13 +196,13 @@ const Chats = ({ isHovered }) => {
                 key={index}
                 className="h-[90px] flex items-center gap-4 rounded-3xl p-4 bg-c1/[0.5] animate-pulse"
               >
-                <div className="w-12 h-12 rounded-full bg-gray-400"></div>
+                <div className="w-6 h-6 rounded-full bg-gray-200"></div>
                 <div className="flex flex-col gap-1 grow">
                   <span className="text-base text-white flex items-center justify-between">
-                    <div className="w-24 h-4 bg-gray-400"></div>
-                    <div className="w-16 h-3 bg-gray-400"></div>
+                    <div className="w-12 h-4 bg-gray-400"></div>
+                    {/* <div className="w-16 h-3 bg-gray-400"></div> */}
                   </span>
-                  <p className="text-sm text-c3 line-clamp-1 break-all w-40 h-3 bg-gray-400"></p>
+                  <p className="text-sm text-c3 line-clamp-1 break-all w-16 h-4 bg-gray-400"></p>
                 </div>
               </li>
             ))

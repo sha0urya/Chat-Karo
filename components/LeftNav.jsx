@@ -193,7 +193,7 @@ const LeftNav = () => {
         <ToastMessage />
         <Icon
           size="small"
-          className="absolute top-0 right-5 hover:bg-c2"
+          className="absolute top-0 right-5 hover:bg-slate-300 dark:hover:hover:bg-c2"
           icon={<IoClose size={20} />}
           onClick={() => setEditProfile(false)}
         />
