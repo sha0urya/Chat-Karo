@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
-import Navbar from "../components/Navbar";
-import Sidebar from "../components/Sidebar";
-import MainContent from "../components/MainContent";
+import Navbar from "../components/news/Navbar";
+import Sidebar from "../components/news/Sidebar";
+import MainContent from "../components/news/MainContent";
 import { useAuth } from "@/context/authContext";
 import { useTheme } from "@/context/themeContext";
 import fetchNews from "@/utils/fetchNews";

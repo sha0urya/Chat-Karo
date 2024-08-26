@@ -60,9 +60,7 @@ function HourlyWeather({ city, isDarkMode }) {
   if (loading)
     return (
       <div
-        className={`h-32 flex text-center items-center justify-center ${
-          isDarkMode ? "dark:bg-gray-800" : "bg-gray-100"
-        }`}
+        className={`h-32 flex text-center items-center justify-center`}
       >
         <div>
           <Image src="/sloader.svg" alt="Loading..." width={40} height={40} />

@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { FaSun, FaMoon } from "react-icons/fa";
-import SearchBar from "../components/SearchBar";
+import SearchBar from "./SearchBar";
 import { MdArrowDropDownCircle } from "react-icons/md";
 import ClickAwayListener from "react-click-away-listener";
-import Sidebar from "../components/Sidebar";
+import Sidebar from "./Sidebar";
 
 const Navbar = ({
   theme,

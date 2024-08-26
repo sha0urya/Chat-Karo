@@ -1,5 +1,5 @@
 import React from "react";
-import Icon from "../Icon";
+import Icon from "../chat/Icon";
 import { IoClose } from "react-icons/io5";
 const PopupWrapper = (props) => {
     return (

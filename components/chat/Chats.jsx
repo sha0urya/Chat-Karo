@@ -200,7 +200,6 @@ const Chats = ({ isHovered }) => {
                 <div className="flex flex-col gap-1 grow">
                   <span className="text-base text-white flex items-center justify-between">
                     <div className="w-12 h-4 bg-gray-400"></div>
-                    {/* <div className="w-16 h-3 bg-gray-400"></div> */}
                   </span>
                   <p className="text-sm text-c3 line-clamp-1 break-all w-16 h-4 bg-gray-400"></p>
                 </div>

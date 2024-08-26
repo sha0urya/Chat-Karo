@@ -1,5 +1,5 @@
-import { useAuth } from "@/context/authContext";
 import React, { useState } from "react";
+import { useAuth } from "@/context/authContext";
 import Avatar from "./Avatar";
 import { useChatContext } from "@/context/chatContext";
 import Image from "next/image";
@@ -7,9 +7,8 @@ import ImageViewer from "react-simple-image-viewer";
 import { Timestamp, doc, getDoc, updateDoc } from "firebase/firestore";
 import { formateDate, wrapEmojisInHtmlTag } from "@/utils/helpers";
 import Icon from "./Icon";
-import { GoChevronDown } from "react-icons/go";
 import MessageMenu from "./MessageMenu";
-import DeleteMsgPopup from "./popup/DeleteMsgPopup";
+import DeleteMsgPopup from "../popup/DeleteMsgPopup";
 import { db } from "@/firebase/firebase";
 import { DELETED_FOR_EVERYONE, DELETED_FOR_ME } from "@/utils/constants";
 import ClickAwayListener from "react-click-away-listener";

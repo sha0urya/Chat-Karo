@@ -54,7 +54,7 @@ function DailyWeather({ location }) {
 
   if (loading)
     return (
-      <div className="h-32 flex text-center items-center justify-center dark:bg-gray-800 bg-gray-100">
+      <div className="h-32 flex text-center items-center justify-center ">
         <div>
           <Image src="/sloader.svg" alt="Loading..." width={40} height={40} />
         </div>

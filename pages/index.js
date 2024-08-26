@@ -2,9 +2,9 @@ import React, { useEffect, useState } from "react";
 import { useAuth } from "@/context/authContext";
 import { useRouter } from "next/router";
 import Loader from "@/components/Loader";
-import LeftNav from "@/components/LeftNav";
-import Chats from "@/components/Chats";
-import Chat from "@/components/Chat";
+import LeftNav from "@/components/chat/LeftNav";
+import Chats from "@/components/chat/Chats";
+import Chat from "@/components/chat/Chat";
 import { useChatContext } from "@/context/chatContext";
 
 const Home = () => {
