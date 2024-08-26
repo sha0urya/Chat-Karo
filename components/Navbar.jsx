@@ -53,19 +53,19 @@ const Navbar = ({
         isOpen={isSidebarOpen}
         onClose={() => setIsSidebarOpen(false)}
         categories={[
-          { id: "general", label: "Uncategorized" },
+          { id: "latest", label: "Latest News" },
           { id: "business", label: "Business" },
           { id: "entertainment", label: "Entertainment" },
           { id: "sports", label: "Sports" },
           { id: "technology", label: "Technology" },
           { id: "health", label: "Health" },
           { id: "science", label: "Science" },
+          { id: "world", label: "World" },
         ]}
         category={category} // Use the passed category prop
         handleCategoryClick={(catId) => {
           setCategory(catId); // Update the category state in the News component
         }}
-        handleGoBack={() => {}}
       />
     </div>
   );

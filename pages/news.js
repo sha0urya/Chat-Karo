@@ -1,18 +1,18 @@
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
-import axios from "axios";
 import Navbar from "../components/Navbar";
 import Sidebar from "../components/Sidebar";
 import MainContent from "../components/MainContent";
 import { useAuth } from "@/context/authContext";
 import { useTheme } from "@/context/themeContext";
+import fetchNews from "@/utils/fetchNews";
 
 const News = () => {
   const [allNews, setAllNews] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [query, setQuery] = useState("");
-  const [category, setCategory] = useState("technology");
+  const [category, setCategory] = useState("latest");
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(9);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -22,13 +22,14 @@ const News = () => {
   const { theme, toggleTheme } = useTheme();
 
   const categories = [
-    { id: "general", label: "Uncategorized News" },
-    { id: "business", label: "Business News" },
+    { id: "latest", label: "Latest News" },
     { id: "entertainment", label: "Entertainment News" },
-    { id: "sports", label: "Sports News" },
-    { id: "technology", label: "Technology News" },
+    { id: "world", label: "World News" },
+    { id: "business", label: "Business News" },
     { id: "health", label: "Health News" },
+    { id: "sport", label: "Sports News" },
     { id: "science", label: "Science News" },
+    { id: "technology", label: "Technology News" },
   ];
 
   useEffect(() => {
@@ -37,56 +38,43 @@ const News = () => {
     }
   }, [currentUser, isLoading, router]);
 
+  const handleSearch = async () => {
+    setCategory(""); // Reset category to avoid filtering by category
+    setPage(1);
+    setLoading(true); // Set loading to true before fetching data
+    try {
+      const searchResults = await fetchNews("search", query); // Fetch search results
+      setAllNews(searchResults);
+    } catch (err) {
+      setError("Failed to fetch search results.");
+    } finally {
+      setLoading(false); // Set loading to false after fetching
+    }
+  };
+
   useEffect(() => {
-    const fetchNews = async () => {
+    const getNews = async () => {
+      setLoading(true); // Set loading to true before fetching data
       try {
-        const baseUrl = "http://api.mediastack.com/v1/news";
-        let params = {
-          access_key: process.env.NEXT_PUBLIC_MEDIASTACK_API_KEY,
-          countries: "in",
-          languages: "en",
-        };
-
-        if (category !== "general") {
-          params.categories = category;
-        } else if (query) {
-          params.keywords = query;
-        }
-
-        const { data } = await axios.get(baseUrl, { params });
-        setAllNews(data.data);
-        setLoading(false);
+        const newsData = await fetchNews(category);
+        setAllNews(newsData);
       } catch (err) {
-        console.error("Error fetching news: ", err);
-        setError("Please try again later.");
-        setLoading(false);
+        setError("Failed to load news.");
+      } finally {
+        setLoading(false); // Set loading to false after fetching
       }
     };
 
-    fetchNews();
+    if (!query) {
+      getNews();
+    }
   }, [category, query]);
 
   const handleCategoryClick = (catId) => {
     setCategory(catId);
     setPage(1);
-    setLoading(true);
+    setQuery(""); // Clear any search query when selecting a category
   };
-
-  const handleSearch = () => {
-    setCategory("general");
-    setPage(1);
-    setLoading(true);
-  };
-
-  const handleGoBack = () => {
-    router.back();
-  };
-
-  const openSidebar = () => setIsSidebarOpen(true);
-  const closeSidebar = () => setIsSidebarOpen(false);
-
-  // Paginate the news data
-  const paginatedNews = allNews.slice((page - 1) * limit, page * limit);
 
   return (
     <div className="container mx-auto">
@@ -102,16 +90,16 @@ const News = () => {
 
       <Sidebar
         isOpen={isSidebarOpen}
-        onClose={closeSidebar}
+        onClose={() => setIsSidebarOpen(false)}
         categories={categories}
         category={category}
         handleCategoryClick={handleCategoryClick}
-        handleGoBack={handleGoBack}
       />
+
       <MainContent
-        news={paginatedNews}
-        loading={loading}
-        error={error}
+        news={allNews.slice((page - 1) * limit, page * limit)}
+        loading={loading} // Pass the loading state
+        error={error} // Pass the error state
         page={page}
         setPage={setPage}
         limit={limit}

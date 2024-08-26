@@ -23,6 +23,23 @@ module.exports = {
         "gradient-conic":
           "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
       },
+      transitionProperty: {
+        "transform-opacity": "transform, opacity",
+      },
+      keyframes: {
+        fadeIn: {
+          "0%": { opacity: "0", transform: "translateY(4px)" },
+          "100%": { opacity: "1", transform: "translateY(0)" },
+        },
+        fadeOut: {
+          "0%": { opacity: "1", transform: "translateY(0)" },
+          "100%": { opacity: "0", transform: "translateY(4px)" },
+        },
+      },
+      animation: {
+        fadeIn: "fadeIn 300ms ease-in-out",
+        fadeOut: "fadeOut 300ms ease-in-out",
+      },
     },
   },
   plugins: [],
