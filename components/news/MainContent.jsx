@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import NewsCard from "../components/NewsCard";
-import Pagination from "../components/Pagination";
+import NewsCard from "./NewsCard";
+import Pagination from "../Pagination";
 import Loader from "@/components/Loader";
 import Image from "next/image";
 import { FaArrowUp } from "react-icons/fa";

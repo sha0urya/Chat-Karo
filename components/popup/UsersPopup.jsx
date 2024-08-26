@@ -2,7 +2,7 @@ import React from "react";
 import PopupWrapper from "./PopupWrapper";
 import { useAuth } from "@/context/authContext";
 import { useChatContext } from "@/context/chatContext";
-import Avatar from "../Avatar";
+import Avatar from "../chat/Avatar";
 import { db } from "@/firebase/firebase";
 import {
     deleteField,
@@ -12,7 +12,7 @@ import {
     setDoc,
     updateDoc,
 } from "firebase/firestore";
-import Search from "../Search";
+import Search from "../chat/Search";
 
 const UsersPopup = (props) => {
     const { currentUser } = useAuth();
