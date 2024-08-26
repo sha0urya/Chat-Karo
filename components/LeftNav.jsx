@@ -20,6 +20,7 @@ import LogoutModal from "./modal/LogoutModal";
 import RoomModal from "./modal/RoomModal";
 import { FaVideo } from "react-icons/fa6";
 import { FaRegNewspaper } from "react-icons/fa6";
+import { FaCloud } from "react-icons/fa";
 
 
 const LeftNav = () => {
@@ -78,6 +79,10 @@ const LeftNav = () => {
     const roomID = "exampleRoomID"; // Replace this with your logic to generate or retrieve a room ID
     router.push(`/VideoCall?roomID=${roomID}`); // Redirect to the video call page with the roomID
   };
+  
+  const handleWeatherNow = () => {
+    router.push("/weather");
+  }
 
   const uploadImageToFirestore = (file) => {
     try {
@@ -307,20 +312,25 @@ const LeftNav = () => {
       >
         {" "}
         <Icon
-          size="x-large"
+          size="large"
+          className="bg-blue-500 hover:bg-gray-600"
+          icon={<FaCloud size={24} />}
+          onClick={handleWeatherNow}
+        />
+        <Icon
+          size="large"
           className="bg-blue-500 hover:bg-gray-600"
           icon={<FaRegNewspaper size={24} />}
           onClick={handleNewsRedirect}
         />
-
         <Icon
-          size="x-large"
+          size="large"
           className="bg-green-500 hover:bg-gray-600"
           icon={<FaVideo size={24} />}
           onClick={() => setShowRoomModal(true)}
         />
         <Icon
-          size="x-large"
+          size="large"
           className="bg-green-500 hover:bg-gray-600"
           icon={<FiPlus size={24} />}
           onClick={() => setUsersPopup(!usersPopup)}

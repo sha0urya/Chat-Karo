@@ -33,11 +33,6 @@ const Home = () => {
             }`}
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
-            // style={{
-            //   backgroundImage: "url('/wallpaper.jpg')",
-            //   backgroundSize: "cover",
-            //   backgroundPosition: "center",
-            // }}
           >
             <div className="flex flex-col min-h-full">
               <Chats isHovered={isHovered} />
