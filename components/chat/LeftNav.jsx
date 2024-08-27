@@ -75,10 +75,10 @@ const LeftNav = () => {
     return roomID.length > 5; // Example validation
   };
 
-  const handleVideoCallRedirect = () => {
-    const roomID = "exampleRoomID"; // Replace this with your logic to generate or retrieve a room ID
-    router.push(`/VideoCall?roomID=${roomID}`); // Redirect to the video call page with the roomID
-  };
+  // const handleVideoCallRedirect = () => {
+  //   const roomID = "exampleRoomID"; // Replace this with your logic to generate or retrieve a room ID
+  //   router.push(`/VideoCall?roomID=${roomID}`); // Redirect to the video call page with the roomID
+  // };
   
   const handleWeatherNow = () => {
     router.push("/weather");

@@ -6,10 +6,14 @@ function HourlyWeather({ city, isDarkMode }) {
   const [hourlyData, setHourlyData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedHour, setSelectedHour] = useState(null);
+  const [selectedDate, setSelectedDate] = useState(() => {
+    const today = new Date();
+    return today.toISOString().split("T")[0]; // default to today
+  });
 
   useEffect(() => {
     const fetchHourlyData = async () => {
-      const url = `https://apjoy-weather-forecast.p.rapidapi.com/forecast?location=${city}&days=8`;
+      const url = `https://apjoy-weather-forecast.p.rapidapi.com/forecast?location=${city}&days=40`;
       const options = {
         headers: {
           "x-rapidapi-host": "apjoy-weather-forecast.p.rapidapi.com",
@@ -21,16 +25,12 @@ function HourlyWeather({ city, isDarkMode }) {
         const response = await axios.get(url, options);
         const data = response.data.list;
 
-        const today = new Date();
-        const startOfDay = new Date(today.setHours(0, 0, 0, 0)).getTime();
-        const endOfDay = new Date(today.setHours(23, 59, 59, 999)).getTime();
-
-        const todayHourlyData = data.filter((item) => {
-          const itemDate = new Date(item.dt_txt).getTime();
-          return itemDate >= startOfDay && itemDate <= endOfDay;
+        const filteredHourlyData = data.filter((item) => {
+          const itemDate = new Date(item.dt_txt).toISOString().split("T")[0];
+          return itemDate === selectedDate; // Match with selected date
         });
 
-        setHourlyData(todayHourlyData);
+        setHourlyData(filteredHourlyData);
         setLoading(false);
       } catch (error) {
         console.error("Error fetching the weather data:", error);
@@ -41,7 +41,7 @@ function HourlyWeather({ city, isDarkMode }) {
     if (city) {
       fetchHourlyData();
     }
-  }, [city]);
+  }, [city, selectedDate]);
 
   const handleCardClick = (hour) => {
     setSelectedHour(hour);
@@ -59,9 +59,7 @@ function HourlyWeather({ city, isDarkMode }) {
 
   if (loading)
     return (
-      <div
-        className={`h-32 flex text-center items-center justify-center`}
-      >
+      <div className="h-32 flex text-center items-center justify-center">
         <div>
           <Image src="/sloader.svg" alt="Loading..." width={40} height={40} />
         </div>
@@ -72,18 +70,27 @@ function HourlyWeather({ city, isDarkMode }) {
     <div
       className={`bg-[#04244d] ${
         isDarkMode ? "dark:bg-[#001f3f]" : "bg-[#001f3f]"
-      } w-[100%] p-4 rounded-md flex justify-center`}
+      } w-full p-4 rounded-md flex flex-col items-center`}
     >
-      <div className="absolute">
+      {/* Centered Header and Date Picker */}
+      <div className="flex flex-col items-center mb-6">
         <h2
           className={`text-white ${
             isDarkMode ? "dark:text-gray-300" : "text-gray-300"
-          } text-xl font-bold mb-2`}
+          } text-xl font-bold mb-2 text-center`}
         >
           Hourly Forecast for {city}
         </h2>
+        <input
+          type="date"
+          value={selectedDate}
+          onChange={(e) => setSelectedDate(e.target.value)}
+          className="p-2 rounded bg-gray-200 text-gray-800 dark:bg-gray-700 dark:text-gray-300"
+        />
       </div>
-      <div className="flex mt-4 p-10 space-x-2 overflow-x-auto">
+
+      {/* Hourly Weather Data */}
+      <div className="flex flex-wrap justify-center space-x-2 space-y-2">
         {hourlyData && hourlyData.length > 0 ? (
           hourlyData.map((hour, index) => (
             <div
@@ -91,9 +98,7 @@ function HourlyWeather({ city, isDarkMode }) {
               onClick={() => handleCardClick(hour)}
               className={`flex flex-col items-center ${
                 isDarkMode ? "bg-[#003366]" : "bg-[#042f63]"
-              } p-2 rounded-lg ${
-                index === 0 ? "border-2 border-white" : ""
-              } cursor-pointer`}
+              } p-4 rounded-lg cursor-pointer w-24`}
             >
               <p
                 className={`text-white ${
@@ -127,7 +132,7 @@ function HourlyWeather({ city, isDarkMode }) {
               isDarkMode ? "dark:text-gray-300" : "text-gray-300"
             }`}
           >
-            No hourly data available.
+            No hourly data available for the selected date.
           </div>
         )}
       </div>
@@ -250,9 +255,7 @@ function HourlyWeather({ city, isDarkMode }) {
               onClick={closeModal}
               className={`mt-4 bg-blue-500 ${
                 isDarkMode ? "dark:bg-blue-700" : "bg-blue-700"
-              } text-white ${
-                isDarkMode ? "dark:text-gray-200" : "text-gray-800"
-              } py-2 px-4 rounded transition-transform transform hover:scale-105 active:scale-95 hover:bg-blue-600 ${
+              } text-white py-2 px-4 rounded transition-transform transform hover:scale-105 active:scale-95 hover:bg-blue-600 ${
                 isDarkMode ? "dark:hover:bg-blue-800" : "hover:bg-blue-300"
               } focus:outline-none focus:ring-2 focus:ring-blue-500 ${
                 isDarkMode ? "dark:focus:ring-blue-300" : "focus:ring-blue-800"
