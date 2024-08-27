@@ -24,7 +24,7 @@ function DailyWeather({ location }) {
     const fetchDailyData = async () => {
       const api_key = process.env.NEXT_PUBLIC_RAPIDAPI_KEY_DAY;
       const city = location;
-      const url = `https://weatherapi-com.p.rapidapi.com/forecast.json?q=${city}&days=14`;
+      const url = `https://weatherapi-com.p.rapidapi.com/forecast.json?q=${city}&days=50`;
 
       try {
         const response = await axios.get(url, {
